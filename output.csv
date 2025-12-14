@@ -1,0 +1,360 @@
+file_name,risk,report
+freeway_0000,0,nothing will happend
+freeway_0001,0,nothing will happend
+freeway_0002,0,nothing will happend
+freeway_0003,0,nothing will happend
+freeway_0004,0,nothing will happend
+freeway_0005,0,nothing will happend
+freeway_0006,1,crash
+freeway_0007,0,nothing will happend
+freeway_0008,0,nothing will happend
+freeway_0009,1,accident
+freeway_0010,1,"The potential risk ahead is that the car is following a bus on the right side of the road, which could lead to a collision if the bus stops suddenly or if the car driver fails to notice the bus."
+freeway_0011,0,nothing will happend
+freeway_0012,1,speed camera
+freeway_0013,1,crash
+freeway_0014,0,nothing will happend
+freeway_0015,0,nothing will happend
+freeway_0016,0,nothing will happend
+freeway_0017,1,The risk ahead is the possibility of a sudden lane change or a vehicle stopping in the middle of the road.
+freeway_0018,0,nothing will happend
+freeway_0019,1,accident
+freeway_0020,0,nothing will happend
+freeway_0021,0,nothing will happend
+freeway_0022,0,nothing will happend
+freeway_0023,0,nothing will happend
+freeway_0024,1,The potential risk ahead is that the car is approaching from the opposite direction.
+freeway_0025,0,nothing will happend
+freeway_0026,0,nothing will happend
+freeway_0027,1,"The potential risk ahead is that the black car is approaching from the right side of the road, which could cause a collision if the black car does not slow down or stop."
+freeway_0028,0,nothing will happend
+freeway_0029,1,potential accident
+freeway_0030,1,Potential risk: The black car is stopped on the right side of the road. This could indicate that the driver might be waiting for a traffic light or for a specific reason. It is important to be cautious and maintain a safe distance from the stopped vehicle to avoid any accidents.
+freeway_0031,0,nothing will happend
+freeway_0032,0,nothing will happend
+freeway_0033,0,nothing will happend
+freeway_0034,0,nothing will happend
+freeway_0035,0,nothing will happend
+freeway_0036,0,nothing will happend
+freeway_0037,1,crash
+freeway_0038,0,nothing will happend
+freeway_0039,0,nothing will happend
+freeway_0040,0,nothing will happend
+freeway_0041,1,"The potential risk ahead is that the bus is approaching, which could cause a collision if the driver does not maintain a safe distance."
+freeway_0042,1,accident
+freeway_0043,1,"The potential risk ahead is that the truck is driving too fast, which could lead to an accident."
+freeway_0044,0,nothing will happend
+freeway_0045,0,nothing will happend
+freeway_0046,0,nothing will happend
+freeway_0047,1,tow truck
+freeway_0048,0,nothing will happend
+freeway_0049,0,nothing will happend
+freeway_0050,1,"The risk ahead is the possibility of a truck or other vehicles to overtake or change lanes, which could lead to a collision."
+freeway_0051,1,Potential risk: lane change ahead
+freeway_0052,0,nothing will happend
+freeway_0053,0,nothing will happend
+freeway_0054,0,nothing will happend
+freeway_0055,0,nothing will happend
+freeway_0056,1,The risk ahead is the possibility of a sudden lane change or a vehicle stopping in the middle of the road.
+freeway_0057,1,crash
+freeway_0058,1,crash
+freeway_0059,0,nothing will happend
+freeway_0060,1,Potential risk: Blind spot
+freeway_0061,0,nothing will happend
+freeway_0062,1,Potential risk: The car is about to pass the truck.
+freeway_0063,1,Risky driving conditions
+freeway_0064,0,nothing will happend
+freeway_0065,0,nothing will happend
+freeway_0066,0,nothing will happend
+freeway_0067,0,nothing will happend
+freeway_0068,1,crash
+freeway_0069,0,nothing will happend
+freeway_0070,0,nothing will happend
+freeway_0071,1,potential risk: lane change
+freeway_0072,0,nothing will happend
+freeway_0073,0,nothing will happend
+freeway_0074,0,nothing will happend
+freeway_0075,0,nothing will happend
+freeway_0076,0,nothing will happend
+freeway_0077,0,nothing will happend
+freeway_0078,0,nothing will happend
+freeway_0079,1,"The potential risk ahead is that the white car is approaching from the right side of the road, which could cause a collision if the driver does not maintain a safe distance."
+freeway_0080,0,nothing will happend
+freeway_0081,1,crash
+freeway_0082,0,nothing will happend
+freeway_0083,1,accident
+freeway_0084,1,Possible accident
+freeway_0085,1,crash
+freeway_0086,0,nothing will happend
+freeway_0087,0,nothing will happend
+freeway_0088,1,"Potential risk: The road ahead is busy with multiple vehicles, including trucks and cars, which could lead to traffic congestion or accidents."
+freeway_0089,1,Potential risk: Over-taking truck
+freeway_0090,0,nothing will happend
+freeway_0091,0,nothing will happend
+freeway_0092,0,nothing will happend
+freeway_0093,0,nothing will happend
+freeway_0094,1,The potential risk ahead is there is a large truck ahead.
+freeway_0095,1,"The potential risk ahead is the possibility of encountering another vehicle, as indicated by the red car in the distance."
+freeway_0096,0,nothing will happend
+freeway_0097,1,crash
+freeway_0098,0,nothing will happend
+freeway_0099,1,Potential risk: The truck is driving too close to the bus.
+freeway_0100,1,crash
+freeway_0101,0,nothing will happend
+freeway_0102,0,nothing will happend
+freeway_0103,1,crash
+freeway_0104,1,crash
+freeway_0105,0,nothing will happend
+freeway_0106,0,nothing will happend
+freeway_0107,0,nothing will happend
+freeway_0108,0,nothing will happend
+freeway_0109,0,nothing will happend
+freeway_0110,1,Potential risk: lane change ahead
+freeway_0111,0,nothing will happend
+freeway_0112,0,nothing will happend
+freeway_0113,1,Potential risk: Overloading vehicles on the highway.
+freeway_0114,0,nothing will happend
+freeway_0115,0,nothing will happend
+freeway_0116,0,nothing will happend
+freeway_0117,1,Potential risk: Overloading truck
+freeway_0118,0,nothing will happend
+freeway_0119,0,nothing will happend
+freeway_0120,0,nothing will happend
+freeway_0121,0,nothing will happend
+freeway_0122,0,nothing will happend
+freeway_0123,0,nothing will happend
+freeway_0124,1,crash
+freeway_0125,0,nothing will happend
+freeway_0126,0,nothing will happend
+freeway_0127,1,Potential risk: lane change ahead.
+freeway_0128,1,"Potential risk: The truck ahead is turning right, which could cause a collision or traffic jam."
+freeway_0129,1,"The risk ahead is the possibility of a car or truck suddenly stopping or changing lanes, which could lead to a collision."
+freeway_0130,0,nothing will happend
+freeway_0131,1,crash
+freeway_0132,0,nothing will happend
+freeway_0133,1,"The potential risk ahead is that the white car might be slowing down or stopping, which could cause a collision or a traffic jam."
+freeway_0134,1,crash
+freeway_0135,0,nothing will happend
+freeway_0136,0,nothing will happend
+freeway_0137,0,nothing will happend
+freeway_0138,1,crash
+freeway_0139,1,Potential risk: vehicle breakdown
+freeway_0140,0,nothing will happend
+freeway_0141,0,nothing will happend
+freeway_0142,1,"The potential risk ahead is that the truck is approaching, which could cause a collision if the driver does not maintain a safe distance or if they are not paying attention to the road."
+freeway_0143,0,nothing will happend
+freeway_0144,0,nothing will happend
+freeway_0145,0,nothing will happend
+freeway_0146,1,crash
+freeway_0147,0,nothing will happend
+freeway_0148,1,accident
+freeway_0149,0,nothing will happend
+freeway_0150,1,"The potential risk ahead is that the truck is approaching a curve, which could lead to a sudden change in direction or speed, increasing the risk of accidents."
+freeway_0151,1,crash
+freeway_0152,0,nothing will happend
+freeway_0153,0,nothing will happend
+freeway_0154,1,"The potential risk ahead is that the blue minivan is stopping, which could cause traffic congestion or an accident."
+freeway_0155,1,crash
+freeway_0156,0,nothing will happend
+freeway_0157,1,crash
+freeway_0158,0,nothing will happend
+freeway_0159,0,nothing will happend
+freeway_0160,1,crash
+freeway_0161,1,crash
+freeway_0162,1,"Potential risk: The road is foggy, and the visibility is low, which increases the risk of accidents."
+freeway_0163,1,"The potential risk ahead is that the car is about to merge into the oncoming lane, which could lead to a collision if not handled properly."
+freeway_0164,0,nothing will happend
+freeway_0165,0,nothing will happend
+freeway_0166,1,Potential risk: Traffic congestion or lane change.
+freeway_0167,1,"The potential risk ahead is that the yellow truck is driving too fast, which could cause a collision or an accident."
+freeway_0168,0,nothing will happend
+freeway_0169,1,Potential risk: lane change ahead
+freeway_0170,1,Potential risk: The blue truck is approaching from the right side of the road.
+freeway_0171,0,nothing will happend
+freeway_0172,0,nothing will happend
+freeway_0173,0,nothing will happend
+freeway_0174,1,"The potential risk ahead is that the blue truck is driving too close to the car, which could lead to a collision."
+freeway_0175,0,nothing will happend
+freeway_0176,1,potential risk: lane change
+freeway_0177,1,"The potential risk ahead is that the green truck is driving too close to the car, which could lead to a collision if the truck brakes suddenly."
+freeway_0178,0,nothing will happend
+freeway_0179,1,"The potential risk ahead is that the car is driving on the highway, and the road is relatively empty. It is important to maintain a safe distance from the car in front and be prepared to react to any sudden changes in traffic conditions."
+road_0000,1,"The potential risk ahead is that the traffic light is red, which means the car must stop."
+road_0001,1,The car is about to turn right.
+road_0002,1,traffic jam
+road_0003,1,"The potential risk ahead is that the car is approaching a traffic light, which could lead to a stop or slow down."
+road_0004,1,risk of collision
+road_0005,0,nothing will happend
+road_0006,0,nothing will happend
+road_0007,0,nothing will happend
+road_0008,0,nothing will happend
+road_0009,0,nothing will happend
+road_0010,0,nothing will happend
+road_0011,0,nothing will happend
+road_0012,0,nothing will happend
+road_0013,0,nothing will happend
+road_0014,0,nothing will happend
+road_0015,1,The potential risk ahead is that the motorcycle rider might not be able to stop in time if the traffic light changes.
+road_0016,1,The risk ahead is the possibility of a car or motorcycle approaching from the right side of the road.
+road_0017,1,"The potential risk ahead is that the car is approaching a curve, and the driver should be cautious to avoid losing control of the vehicle."
+road_0018,1,"The potential risk ahead is that the blue truck may not stop at the intersection, which could cause a collision."
+road_0019,0,nothing will happend
+road_0020,0,nothing will happend
+road_0021,1,"The potential risk ahead is that the motorcycle is approaching the intersection, which could lead to a collision if the driver does not stop or slow down."
+road_0022,0,nothing will happend
+road_0023,1,"The potential risk ahead is that the blue car is about to turn left, which could cause a collision with the yellow car or other vehicles."
+road_0024,0,nothing will happend
+road_0025,0,nothing will happend
+road_0026,1,Red light
+road_0027,0,nothing will happend
+road_0028,1,"The potential risk ahead is that the silver car may not be paying attention to the pedestrian crossing, which could lead to an accident."
+road_0029,1,"The potential risk ahead is that the white car may not be following the traffic rules, as it is driving too close to the white car in front of it. This could lead to a collision or other accidents."
+road_0030,0,nothing will happend
+road_0031,1,The potential risk ahead is that the road is narrow and there are vehicles approaching from both sides.
+road_0032,1,"The potential risk ahead is that the motorcycle is approaching a traffic light, which could lead to a stop or slow down."
+road_0033,0,nothing will happend
+road_0034,0,nothing will happend
+road_0035,1,The potential risk ahead is that the rider may not be able to stop in time if the traffic light turns red.
+road_0036,0,nothing will happend
+road_0037,1,"The potential risk ahead is that the car is about to turn left, which could lead to a collision with the car in front."
+road_0038,0,nothing will happend
+road_0039,0,nothing will happend
+road_0040,0,nothing will happend
+road_0041,0,nothing will happend
+road_0042,1,"The potential risk ahead is that the motorcycle is approaching a red light, which could lead to a traffic violation."
+road_0043,1,"The potential risk ahead is that the car in front is about to turn right, which could cause a collision if not avoided."
+road_0044,0,nothing will happend
+road_0045,0,nothing will happend
+road_0046,0,nothing will happend
+road_0047,0,nothing will happend
+road_0048,0,nothing will happend
+road_0049,0,nothing will happend
+road_0050,0,nothing will happend
+road_0051,0,nothing will happend
+road_0052,0,nothing will happend
+road_0053,0,nothing will happend
+road_0054,0,nothing will happend
+road_0055,0,nothing will happend
+road_0056,0,nothing will happend
+road_0057,0,nothing will happend
+road_0058,0,nothing will happend
+road_0059,0,nothing will happend
+road_0060,0,nothing will happend
+road_0061,0,nothing will happend
+road_0062,0,nothing will happend
+road_0063,0,nothing will happend
+road_0064,0,nothing will happend
+road_0065,0,nothing will happend
+road_0066,1,"The potential risk ahead is that the white car is about to turn left, which could cause a collision if the red car does not react quickly."
+road_0067,0,nothing will happend
+road_0068,1,"The potential risk ahead is that the motorcycle rider might not be paying attention to the traffic light, which could lead to an accident."
+road_0069,0,nothing will happend
+road_0070,1,"The potential risk ahead is that the blue truck is about to turn right, which could cause a collision if the driver of the white car does not react quickly."
+road_0071,1,accident
+road_0072,1,traffic
+road_0073,0,nothing will happend
+road_0074,0,nothing will happend
+road_0075,0,nothing will happend
+road_0076,0,nothing will happend
+road_0077,0,nothing will happend
+road_0078,0,nothing will happend
+road_0079,0,nothing will happend
+road_0080,0,nothing will happend
+road_0081,0,nothing will happend
+road_0082,0,nothing will happend
+road_0083,0,nothing will happend
+road_0084,0,nothing will happend
+road_0085,0,nothing will happend
+road_0086,0,nothing will happend
+road_0087,0,nothing will happend
+road_0088,0,nothing will happend
+road_0089,0,nothing will happend
+road_0090,0,nothing will happend
+road_0091,1,Potential risk: lane change ahead
+road_0092,1,"The potential risk ahead is that the motorcycle rider is approaching the intersection, which could lead to a collision with vehicles or pedestrians."
+road_0093,0,nothing will happend
+road_0094,0,nothing will happend
+road_0095,0,nothing will happend
+road_0096,0,nothing will happend
+road_0097,0,nothing will happend
+road_0098,0,nothing will happend
+road_0099,0,nothing will happend
+road_0100,0,nothing will happend
+road_0101,0,nothing will happend
+road_0102,0,nothing will happend
+road_0103,0,nothing will happend
+road_0104,0,nothing will happend
+road_0105,1,The risk ahead is the possibility of a truck or another vehicle entering the intersection from the left.
+road_0106,0,nothing will happend
+road_0107,0,nothing will happend
+road_0108,0,nothing will happend
+road_0109,0,nothing will happend
+road_0110,0,nothing will happend
+road_0111,0,nothing will happend
+road_0112,0,nothing will happend
+road_0113,0,nothing will happend
+road_0114,0,nothing will happend
+road_0115,0,nothing will happend
+road_0116,0,nothing will happend
+road_0117,0,nothing will happend
+road_0118,0,nothing will happend
+road_0119,0,nothing will happend
+road_0120,0,nothing will happend
+road_0121,0,nothing will happend
+road_0122,0,nothing will happend
+road_0123,0,nothing will happend
+road_0124,1,"The potential risk ahead is that the motorcycle is approaching the intersection, which could lead to a collision if the motorcycle does not yield to the car."
+road_0125,1,"The potential risk ahead is that the white car may not be able to stop in time due to the rain, which could lead to an accident."
+road_0126,1,"The potential risk ahead is that the white car is about to turn left, which could cause a collision if the driver does not react quickly."
+road_0127,1,traffic jam
+road_0128,0,nothing will happend
+road_0129,0,nothing will happend
+road_0130,0,nothing will happend
+road_0131,1,"The potential risk ahead is that the motorcycle is approaching from the left side of the road, which could cause a collision if the driver does not react quickly."
+road_0132,0,nothing will happend
+road_0133,0,nothing will happend
+road_0134,0,nothing will happend
+road_0135,1,"The potential risk ahead is that the motorcycle rider might not be paying attention to the traffic, which could lead to an accident."
+road_0136,0,nothing will happend
+road_0137,1,The potential risk ahead is that the road is narrow and there are cars and motorcycles on it. This could lead to accidents if not handled carefully.
+road_0138,0,nothing will happend
+road_0139,1,"The potential risk ahead is that the road is empty, which may increase the risk of accidents."
+road_0140,0,nothing will happend
+road_0141,0,nothing will happend
+road_0142,0,nothing will happend
+road_0143,0,nothing will happend
+road_0144,0,nothing will happend
+road_0145,0,nothing will happend
+road_0146,0,nothing will happend
+road_0147,0,nothing will happend
+road_0148,0,nothing will happend
+road_0149,0,nothing will happend
+road_0150,0,nothing will happend
+road_0151,0,nothing will happend
+road_0152,0,nothing will happend
+road_0153,0,nothing will happend
+road_0154,0,nothing will happend
+road_0155,1,"The risk ahead is that the traffic light is green, and the car needs to stop."
+road_0156,0,nothing will happend
+road_0157,0,nothing will happend
+road_0158,0,nothing will happend
+road_0159,1,"Potential risk: The truck is about to turn right, which could cause a collision with the pedestrian crossing."
+road_0160,0,nothing will happend
+road_0161,0,nothing will happend
+road_0162,1,"The potential risk ahead is that the motorcycle rider might not be paying attention to the traffic, which could lead to an accident."
+road_0163,0,nothing will happend
+road_0164,0,nothing will happend
+road_0165,0,nothing will happend
+road_0166,0,nothing will happend
+road_0167,1,The potential risk ahead is that the motorcycle is approaching a crossroad with multiple lanes and arrows indicating different directions. This could lead to confusion and potential collisions if the rider does not pay attention to the traffic signs and other vehicles.
+road_0168,0,nothing will happend
+road_0169,0,nothing will happend
+road_0170,1,"The potential risk ahead is that the blue car is about to turn right, which could cause a collision if not controlled properly."
+road_0171,0,nothing will happend
+road_0172,0,nothing will happend
+road_0173,1,The potential risk ahead is that the car may not be able to stop in time due to the rain.
+road_0174,0,nothing will happend
+road_0175,1,"The car ahead is stopped, which could lead to a collision if the car ahead decides to move."
+road_0176,0,nothing will happend
+road_0177,0,nothing will happend
+road_0178,0,nothing will happend
