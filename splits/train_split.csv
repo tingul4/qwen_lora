@@ -1,0 +1,551 @@
+file_name,risk,report
+road_0017,1,"Scene Description: Foggy mountain road with narrow, winding lanes.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Lane Departure (Wrong-Way Driving): A black sedan crosses the double yellow line into the opposing lane.
+
+Blind Curve/Fog: Limited visibility makes it difficult for oncoming traffic to react.
+
+Prediction: The black sedan collides head-on or sideswipes the silver car traveling in the correct lane due to reckless overtaking or loss of control on the curve."
+road_0164,0,
+road_0033,0,
+road_0024,0,"Scene Description: Busy intersection. Two scooters are stopped in the middle of the junction, waiting for cars to pass.
+
+Risk Level: High (Near Miss)
+
+Key Hazards:
+
+Intersection Loitering: Vulnerable road users (scooters) are stationary in a high-risk zone (center of the intersection).
+
+Traffic Flow Conflict: Cars are passing in close proximity to the waiting scooters.
+
+Prediction: A highly dangerous situation (""Close Call""), but no accident occurs as the drivers successfully navigate around the stationary scooters."
+road_0215,0,
+road_0119,1,
+road_0007,0,"Scene Description: Daytime, rural road, rainy conditions. Following a small blue truck.
+
+Risk Level: Medium
+
+Key Hazards:
+
+Slippery Surface: Rain creates a risk of hydroplaning or increased stopping distance.
+
+Road Geometry: Slight curve in the road.
+
+Prediction: Main risk is rear-ending the truck if it slows down for the curve on the wet asphalt."
+road_0090,0,
+road_0046,0,
+road_0073,0,
+road_0093,1,
+road_0076,1,
+road_0286,0,
+road_0060,1,
+road_0077,1,
+road_0063,1,
+road_0234,1,
+road_0229,1,
+road_0111,1,
+road_0231,0,
+road_0180,0,
+road_0144,1,
+road_0239,1,
+road_0075,1,
+road_0297,1,
+road_0278,0,
+road_0097,1,
+road_0092,1,
+road_0192,0,
+road_0025,1,"Scene Description: Urban street. A leading car stops to yield to a vehicle emerging from a side street (right). A scooter approaches from behind.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+The ""Courtesy Trap"" (Suicide Gap): The stopped car obscures the view of the emerging vehicle.
+
+Illegal Overtaking: The scooter rider grows impatient, crosses the double yellow line (opposing lane) to overtake the stopped car, unaware of the emerging vehicle.
+
+Prediction: The scooter collides with the emerging car. The scooter rider's view was blocked (Occlusion), and the reckless overtaking maneuver into the opposing lane caused the crash."
+road_0232,0,
+road_0059,1,
+road_0006,1,"Scene Description: Daytime urban intersection with wide lanes. The ego-vehicle is proceeding straight, and a large truck on the right is turning right.
+
+Risk Level: Critical
+
+Key Hazards:
+
+Traffic Signal Violation (Red Light Running): A silver sedan enters the intersection from the left side, disregarding the traffic signal and crossing the path of the ego-vehicle and the turning truck.
+
+Distraction/Occlusion: The large truck on the right initially draws the driver's attention, potentially distracting from the threat emerging from the left.
+
+Prediction: High risk of a T-bone collision (Side-impact collision). The ego-vehicle must execute emergency braking immediately to avoid hitting the vehicle running the red light"
+road_0185,0,
+road_0173,1,
+road_0030,0,
+road_0022,0,"Scene Description: Rainy day on a city street. A scooter is following a truck.
+
+Risk Level: Medium (Safe)
+
+Key Hazards:
+
+Tailgating: The scooter is following the truck too closely (insufficient braking distance).
+
+Adverse Weather: Rain reduces tire traction (Slippery road).
+
+Prediction: High potential risk due to short following distance, but no accident occurs because the overall traffic speed is low."
+road_0256,0,
+road_0056,1,
+road_0186,1,
+road_0108,1,
+road_0126,1,
+road_0230,0,
+road_0193,0,
+road_0129,1,
+road_0282,0,
+road_0082,0,
+road_0084,1,
+road_0066,1,
+road_0288,1,
+road_0163,1,
+road_0154,0,
+road_0019,1,"Scene Description: Congested urban road. Stop-and-go traffic.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Rear-End Risk: A silver sedan on the right approaches a small truck stopped/slowing ahead.
+
+Late Braking/Brake Failure: The sedan fails to stop in time despite brake lights being visible (or sudden deceleration).
+
+Prediction: The silver sedan rear-ends the small truck due to insufficient safety distance or failure to brake effectively."
+road_0124,0,
+road_0079,0,
+road_0114,1,
+road_0118,1,
+road_0072,1,
+road_0015,1,"Scene Description: Nighttime bustling city street. Ego-vehicle (scooter) is in traffic.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Unsafe Lane Change: A car attempts to change lanes to the left.
+
+Speed/Distance Miscalculation: The driver fails to gauge the speed of the scooter ahead or leaves insufficient following distance during the maneuver.
+
+Prediction: The car grazes or hits the scooter in front due to poor spatial awareness during the lane change."
+road_0010,0,"Scene Description: Daytime intersection. A red car is attempting to turn left while scooters are proceeding straight from the opposing direction.
+
+Risk Level: High (Near Miss)
+
+Key Hazards:
+
+Unprotected Left Turn: The car turns left across the path of oncoming two-wheelers.
+
+Gap Acceptance: The driver misjudges the gap or timing relative to the approaching scooters.
+
+Prediction: A potential collision is narrowly avoided. The left-turning car almost sideswipes the oncoming scooter, but the low speed of both parties allows for a safe stop/evasion."
+road_0194,1,
+road_0101,1,
+road_0068,1,
+road_0224,0,
+road_0037,1,
+road_0016,1,"Scene Description: Evening/Dusk. A main road with an underpass structure on the left.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Merging from Side Road/Alley: A car emerges from a narrow alley on the right to join the main road.
+
+Occlusion/Visibility: The driver's view of the main road (specifically the scooter lane) is likely obstructed or they fail to look.
+
+Prediction: The car pulls out directly into the path of a scooter traveling on the main road, causing a side-impact collision."
+road_0179,1,
+road_0147,0,
+road_0274,0,
+road_0067,0,
+road_0228,1,
+road_0069,0,
+road_0031,1,
+road_0183,0,
+road_0265,1,
+road_0225,1,
+road_0140,0,
+road_0018,1,"Scene Description: Wide, sunny intersection.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+VRU Signal Violation: A scooter rider runs a red light.
+
+Left Turn Conflict: A car is executing a legal left turn on a green light/arrow.
+
+Prediction: The scooter, ignoring the traffic signal, crashes into the car making a left turn."
+road_0181,0,
+road_0096,0,
+road_0132,0,
+road_0262,0,
+road_0086,1,
+road_0248,1,
+road_0245,1,
+road_0116,1,
+road_0146,1,
+road_0292,0,
+road_0197,0,
+road_0206,1,
+road_0055,1,
+road_0172,1,
+road_0184,0,
+road_0167,0,
+road_0139,1,
+road_0253,0,
+road_0038,1,
+road_0125,1,
+road_0195,0,
+road_0283,0,
+road_0137,0,
+road_0112,0,
+road_0168,0,
+road_0117,1,
+road_0277,1,
+road_0271,0,
+road_0155,1,
+road_0176,0,
+road_0178,0,
+road_0002,1,"Scene Description: Urban congested traffic, rainy weather. A blue truck is in the left lane, and a taxi is in the right lane.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Aggressive Lane Change: The blue truck on the left initiates a lane change to the right before the adjacent vehicle (taxi) has safely passed.
+
+Blind Spot / Misjudgment: The truck driver fails to account for the taxi's position or speed, assuming the gap is sufficient.
+
+Prediction: The blue truck will collide with the taxi due to an unsafe cut-in maneuver, resulting in a side-swipe accident."
+road_0115,1,
+road_0143,1,
+road_0177,0,
+road_0120,1,
+road_0210,1,
+road_0260,0,
+road_0127,1,
+road_0074,0,
+road_0029,1,"Scene Description: Nighttime city road. A car changes lanes to the left.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Unsafe Lane Change: The car moves to the left lane without checking the rear-view mirror or blind spot.
+
+Rear-End Risk: The car behind is traveling faster or is too close to react to the cut-in.
+
+Prediction: The lane-changing car is struck by the rear vehicle due to failure to yield during the lane change."
+road_0083,0,
+road_0269,0,
+road_0107,0,
+road_0223,1,
+road_0158,0,
+road_0280,0,
+road_0246,1,
+road_0222,1,
+road_0065,1,
+road_0198,1,
+road_0085,0,
+road_0213,0,
+road_0159,0,
+road_0012,0,"Scene Description: Rainy day at a busy intersection. Wet road surface.
+
+Risk Level: Low
+
+Key Hazards:
+
+Slippery Surface: Reduced traction due to rain.
+
+Complex Traffic: High volume of mixed traffic (cars and scooters).
+
+Prediction: Despite the adverse weather and traffic volume, vehicles are proceeding at cautious speeds, resulting in no accident."
+road_0035,1,
+road_0028,1,"Scene Description: Daytime road. A scooter attempts to turn left into the fast lane.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Improper Merge/Turn: The scooter enters the fast lane (inner lane) without matching the speed of traffic or checking for gaps.
+
+Speed Differential: High-speed traffic in the fast lane cannot brake in time for the slower entering scooter.
+
+Prediction: A collision occurs as the car in the fast lane hits the scooter."
+road_0142,1,
+road_0284,0,
+road_0254,0,
+road_0170,0,
+road_0051,0,
+road_0095,1,
+road_0208,0,
+road_0247,1,
+road_0041,1,
+road_0089,1,
+road_0244,1,
+road_0136,1,
+road_0026,1,"Scene Description: Large intersection. A black car is stopped in the middle of the junction while the cross-traffic light turns green.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Gridlock / Intersection Blocking: The black car fails to clear the intersection before the red light, becoming a static obstacle.
+
+Green Light Assumption: The scooter rider proceeds on green without expecting an obstacle in their path.
+
+Prediction: The scooter crashes into the stationary black car. This highlights the risk of unexpected static obstacles in active traffic lanes."
+road_0293,0,
+road_0141,0,
+road_0200,1,
+road_0000,1,"Scene Description: Nighttime intersection. A silver sedan is in the middle lane, and another vehicle is in the inner (leftmost) lane.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Improper Turn from Wrong Lane: The silver sedan in the middle lane attempts to make a left turn, cutting across the path of the vehicle in the inner lane.
+
+Right-of-Way Violation: The turning vehicle ignores the through-traffic or turning traffic in the designated left-turn lane.
+
+Prediction: High probability of a collision as the silver sedan cuts off the inner-lane vehicle, leading to a side-impact crash."
+road_0268,0,
+road_0272,1,
+road_0100,1,
+road_0259,0,
+road_0255,1,
+road_0171,0,
+road_0098,1,
+road_0036,0,
+road_0061,1,
+road_0150,0,
+road_0236,0,
+road_0202,0,
+road_0242,0,
+road_0011,0,"Scene Description: Daytime urban street with heavy congestion. Traffic is moving slowly or is stationary.
+
+Risk Level: Low
+
+Key Hazards:
+
+Stop-and-Go Traffic: Frequent braking required.
+
+Lane Splitting: Scooters filtering between stopped cars.
+
+Prediction: Safe scenario. No immediate collision risk observed due to the stable, slow-moving traffic flow."
+road_0296,0,
+road_0267,1,
+road_0027,0,"Scene Description: Daytime road. A car executes a right turn while a scooter follows.
+
+Risk Level: Low
+
+Key Hazards:
+
+Deceleration: The car slows down to turn.
+
+Following Distance: The scooter maintains awareness.
+
+Prediction: No accident. The driver manages the turn speed appropriately, and the following traffic reacts safely."
+road_0219,1,
+road_0004,1,"Scene Description: Nighttime road. A large heavy vehicle (truck/bus) is on the left, with other traffic on the right.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Reckless Lane Change: The large vehicle on the left merges right abruptly without decelerating.
+
+Size Disparity: The heavy vehicle bullies its way into the adjacent lane, disregarding the smaller vehicle (car) occupying that space.
+
+Prediction: The large vehicle will side-swipe or crush the car on its front-right due to failure to check blind spots and aggressive driving."
+road_0122,0,
+road_0032,1,
+road_0204,0,
+road_0162,0,
+road_0209,0,
+road_0285,1,
+road_0138,1,
+road_0062,1,
+road_0135,1,
+road_0128,0,
+road_0290,0,
+road_0008,1,"Scene Description: Nighttime wide road. A scooter is positioned to the left of a car (or in the same lane).
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Improper Right Turn: The scooter attempts to turn right directly from a position where a car is present in the right-rear blind spot.
+
+Situational Awareness: The rider fails to check the rear-view mirror or shoulder check before turning.
+
+Prediction: The scooter will turn directly into the path of the car coming from the right-rear, causing a side-swipe collision."
+road_0070,1,
+road_0264,1,
+road_0064,1,
+road_0044,1,
+road_0279,0,
+road_0156,1,
+road_0040,0,
+road_0123,0,
+road_0275,0,
+road_0216,1,
+road_0153,1,
+road_0023,1,"Scene Description: Daytime urban road. A white vehicle interacts with straight-moving traffic.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Improper Lane Crossing: A white car moves across lanes or turns without yielding to the vehicle proceeding straight.
+
+Right-of-Way Violation: The straight-moving vehicle has the right of way, which the crossing vehicle violates.
+
+Prediction: A collision results from the white car's failure to verify that the path was clear before crossing the lane."
+road_0261,0,
+road_0110,0,
+road_0081,1,
+road_0207,1,
+road_0212,0,
+road_0039,0,
+road_0240,1,
+road_0291,0,
+road_0258,1,
+road_0199,1,
+road_0014,1,"Scene Description: Nighttime intersection with traffic signals.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Signal Violation: A dark sedan runs a red light at high speed.
+
+Intersection Crossing: A scooter is legally entering the intersection on a green light.
+
+Prediction: Severe T-bone collision. The car running the red light strikes the scooter which has the right of way."
+road_0047,1,
+road_0094,0,
+road_0263,1,
+road_0227,0,
+road_0273,0,
+road_0201,0,
+road_0161,0,
+road_0043,1,
+road_0217,1,
+road_0145,1,
+road_0190,0,
+road_0220,1,
+road_0251,0,
+road_0003,1,"Scene Description: Nighttime urban road. A scooter is proceeding straight.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Unprotected Left Turn (Opposing Traffic): A car from the opposing lane turns left (cuts out) abruptly without yielding to the oncoming scooter.
+
+Perception Failure: The turning driver likely fails to see the scooter (VRU) due to low light or occlusion.
+
+Prediction: The opposing car cuts directly into the scooter's path, causing an unavoidable frontal collision."
+road_0105,1,
+road_0053,1,
+road_0133,1,
+road_0001,1,"Scene Description: Daytime urban street with roadside parking. The ego-vehicle follows a silver SUV (Lexus).
+
+Risk Level: High
+
+Key Hazards:
+
+Unsafe Lane Re-entry (Pulling Out): A silver sedan parked on the right roadside attempts to merge into the traffic lane or open its door without checking for oncoming traffic.
+
+Right-of-Way Conflict: The parked vehicle fails to yield to the silver SUV (Lexus) that is already established in the lane.
+
+Prediction: High probability of a Side-swipe Collision between the front-right side of the moving SUV and the merging silver sedan."
+road_0131,1,
+road_0103,1,
+road_0049,0,
+road_0080,1,
+road_0205,1,
+road_0034,0,
+road_0091,0,
+road_0052,0,
+road_0241,1,
+road_0013,1,"Scene Description: Daytime city street. A white car is positioned ahead of a scooter.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Right Turn Conflict (Right Hook): The white car turns right directly across the path of the scooter traveling in the outer lane/shoulder.
+
+Failure to Check Blind Spot: The driver fails to notice the scooter approaching from the right rear.
+
+Prediction: The car cuts off the scooter during the turn, leading to a collision as the scooter crashes into the car's side."
+road_0088,1,
+road_0166,1,
+road_0294,0,
+road_0134,1,
+road_0287,0,
+road_0243,1,
+road_0054,1,
+road_0050,1,
+road_0174,1,
+road_0189,1,
+road_0298,0,
+road_0187,1,
+road_0169,0,
+road_0058,0,
+road_0048,0,
+road_0235,1,
+road_0252,1,
+road_0021,1,"Scene Description: Daytime urban road. A car is preparing to turn right.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Right Hook: The car turns right without checking the blind spot for the scooter traveling alongside or behind it.
+
+VRU Conflict: The scooter rider continues straight, unaware of the car's turning intention.
+
+Prediction: The car turns directly into the scooter's path, causing a side-swipe collision."
+road_0160,1,
+road_0276,1,
+road_0191,0,
+road_0257,1,
+road_0149,0,
+road_0130,0,
+road_0151,1,
+road_0099,1,
+road_0087,0,
+road_0214,1,
+road_0121,1,
+road_0299,0,
+road_0020,1,"Scene Description: Intersection. A silver sedan is executing a left turn while a black sedan approaches from the opposing direction.
+
+Risk Level: Critical (Collision Occurred)
+
+Key Hazards:
+
+Left Turn Across Path (LTAP/OD): The silver car turns left across the path of the oncoming black car.
+
+Failure to Yield/Decelerate: The oncoming black car maintains speed and does not yield to the turning vehicle (or vice-versa depending on signal phase), leading to a conflict.
+
+Prediction: A frontal-side collision occurs as the black car crashes into the turning silver sedan due to a lack of mutual yielding."
+road_0188,1,
+road_0071,1,
+road_0106,0,
+road_0270,0,
+road_0102,1,

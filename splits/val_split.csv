@@ -1,0 +1,51 @@
+file_name,risk,report
+road_0203,1,
+road_0266,1,
+road_0152,1,
+road_0009,0,"Scene Description: Daytime intersection under an overpass. A car is in the fast (inner) lane.
+
+Risk Level: Medium (Near Miss / Traffic Violation)
+
+Key Hazards:
+
+Illegal Turn: A car executes a right turn from the inner (fast) lane, cutting across multiple lanes of traffic.
+
+Defensive Driving: The nearby scooter/traffic is moving slowly enough to react.
+
+Prediction: High risk of accident due to the car's illegal maneuver, but actual collision is avoided in this instance due to the low speed of the surrounding scooter/traffic."
+road_0233,1,
+road_0226,1,
+road_0196,0,
+road_0109,1,
+road_0005,0,"Scene Description: Daytime intersection. A scooter attempts a left turn while a car approaches from the right.
+
+Risk Level: High (Near Miss)
+
+Key Hazards:
+
+Negligent Turn: The scooter rider turns left without checking for cross-traffic coming from the right.
+
+Mitigating Factor (Low Speed): Both the scooter and the approaching car are traveling at low speeds.
+
+Prediction: A hazardous situation arises due to the scooter's failure to yield, but a collision is avoided primarily due to the low speed of both parties allowing for reaction time."
+road_0175,1,
+road_0237,0,
+road_0057,1,
+road_0218,0,
+road_0045,0,
+road_0182,0,
+road_0221,1,
+road_0289,0,
+road_0211,1,
+road_0148,0,
+road_0165,0,
+road_0078,0,
+road_0113,1,
+road_0249,1,
+road_0250,1,
+road_0104,0,
+road_0042,1,
+road_0281,0,
+road_0295,0,
+road_0157,0,
+road_0238,1,

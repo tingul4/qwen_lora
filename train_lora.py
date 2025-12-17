@@ -12,7 +12,7 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from sklearn.metrics import roc_auc_score, accuracy_score, confusion_matrix, f1_score
+from sklearn.metrics import roc_auc_score, accuracy_score, confusion_matrix, f1_score, precision_recall_curve
 from PIL import Image
 from qwen_vl_utils import process_vision_info
 
@@ -42,7 +42,9 @@ def set_seed(seed: int):
 
 def get_frames_uniformly(folder_path, num_frames=8):
     """
-    從資料夾中均勻採樣 num_frames 張圖片
+    從資料夾中採樣圖片
+    如果 num_frames == -1，採樣所有圖片
+    否則均勻採樣 num_frames 張圖片
     """
     exts = ["*.jpg", "*.png", "*.jpeg", "*.JPG"]
     all_files = []
@@ -53,6 +55,10 @@ def get_frames_uniformly(folder_path, num_frames=8):
     total_frames = len(all_files)
     if total_frames == 0:
         return []
+    
+    # 如果 num_frames == -1，採樣所有圖片
+    if num_frames == -1:
+        return all_files
     
     if total_frames < num_frames:
         return [all_files[i % total_frames] for i in range(num_frames)]
@@ -65,7 +71,7 @@ def get_frames_uniformly(folder_path, num_frames=8):
         
     return selected_paths
 
-def load_train_data(dataset_root, freeway_csv, road_csv):
+def load_train_data(dataset_root, freeway_csv, road_csv, only_use_labeled_data=False):
     """
     讀取訓練資料：明確指定 Freeway 與 Road 的 CSV 位置
     """
@@ -80,10 +86,19 @@ def load_train_data(dataset_root, freeway_csv, road_csv):
             fname = str(row["file_name"]).strip()
             # 組合路徑
             full_path = os.path.join(dataset_root, "freeway", "train", fname)
+            
+            report = ""
+            if "report" in row and not pd.isna(row["report"]):
+                report = str(row["report"]).strip()
+            
+            if only_use_labeled_data and not report:
+                continue
+
             all_data.append({
                 "folder_path": full_path,
                 "file_name": fname,
                 "risk": float(row["risk"]),
+                "report": report,
                 "type": "freeway_train"
             })
     else:
@@ -98,10 +113,19 @@ def load_train_data(dataset_root, freeway_csv, road_csv):
             fname = str(row["file_name"]).strip()
             # 組合路徑
             full_path = os.path.join(dataset_root, "road", "train", fname)
+            
+            report = ""
+            if "report" in row and not pd.isna(row["report"]):
+                report = str(row["report"]).strip()
+            
+            if only_use_labeled_data and not report:
+                continue
+
             all_data.append({
                 "folder_path": full_path,
                 "file_name": fname,
                 "risk": float(row["risk"]),
+                "report": report,
                 "type": "road_train"
             })
     else:
@@ -131,7 +155,9 @@ def load_val_data(dataset_root, val_csv):
     # 預先定義可能的搜尋路徑
     search_dirs = [
         os.path.join(dataset_root, "freeway", "test"),
-        os.path.join(dataset_root, "road", "test")
+        os.path.join(dataset_root, "road", "test"),
+        os.path.join(dataset_root, "freeway", "train"),
+        os.path.join(dataset_root, "road", "train")
     ]
     
     for _, row in df.iterrows():
@@ -357,12 +383,31 @@ def evaluate_auc(model, dl_val, processor, device):
 
     try:
         auc = roc_auc_score(all_labels, all_probs)
-        preds = [1 if p >= 0.5 else 0 for p in all_probs]
+        
+        # [修改] 尋找最佳門檻值 (Best Threshold)
+        precisions, recalls, thresholds = precision_recall_curve(all_labels, all_probs)
+        # F1 = 2 * (P * R) / (P + R)
+        # 注意: thresholds 的長度比 precisions/recalls 少 1 (最後一個 precision=1, recall=0 沒有對應 threshold)
+        # 但實務上可以直接忽略最後一點或處理長度問題
+        f1_scores = 2 * (precisions * recalls) / (precisions + recalls + 1e-6)
+        
+        # 找出最大 F1 的索引 (最後一個點通常是 0，忽略)
+        # f1_scores[:-1] 對應 thresholds
+        best_idx = np.argmax(f1_scores[:-1]) if len(f1_scores) > 1 else 0
+        best_threshold = thresholds[best_idx] if len(thresholds) > best_idx else 0.5
+        best_f1 = f1_scores[best_idx]
+        
+        LOGGER.info(f"Optimal Threshold Found: {best_threshold:.4f} (Max F1: {best_f1:.4f})")
+        
+        # 使用最佳門檻值進行預測
+        preds = [1 if p >= best_threshold else 0 for p in all_probs]
         acc = accuracy_score(all_labels, preds)
+        
+        # 雖然上面算過 best_f1，這裡用標準函式再確認一次
         f1 = f1_score(all_labels, preds)
         
         tn, fp, fn, tp = confusion_matrix(all_labels, preds).ravel()
-        LOGGER.info(f"Confusion Matrix: TN={tn} FP={fp} FN={fn} TP={tp}")
+        LOGGER.info(f"Confusion Matrix (Thresh={best_threshold:.3f}): TN={tn} FP={fp} FN={fn} TP={tp}")
         
     except ValueError:
         auc = 0.5
@@ -378,7 +423,7 @@ def main():
     # 路徑設定
     parser.add_argument("--dataset_root", type=str, default="/raid/mystery-project/dataset")
     parser.add_argument("--freeway_train_csv", type=str, default="/raid/mystery-project/dataset/freeway_train.csv")
-    parser.add_argument("--road_train_csv", type=str, default="/raid/mystery-project/dataset/road_train.csv")
+    parser.add_argument("--road_train_csv", type=str, default="/raid/mystery-project/dataset/road_train_and_val_with_reports_revised.csv")
     parser.add_argument("--val_csv", type=str, default="/raid/mystery-project/qwen_lora/gt_public.csv")
     
     # 訓練參數
@@ -387,7 +432,9 @@ def main():
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--grad_accum", type=int, default=8)
+    parser.add_argument("--num_frames", type=int, default=8, help="Number of frames to sample from each video. Use -1 to sample all frames.")
     parser.add_argument("--output_dir", type=str, default="checkpoints_lora")
+    parser.add_argument("--only_use_labeled_data", action="store_true", help="Only use data with existing reports for training")
     args = parser.parse_args()
 
     set_seed(42)
@@ -420,8 +467,15 @@ def main():
     train_data = load_train_data(
         args.dataset_root, 
         args.freeway_train_csv, 
-        args.road_train_csv
+        args.road_train_csv,
+        only_use_labeled_data=args.only_use_labeled_data
     )
+    
+    # Log frame sampling configuration
+    if args.num_frames == -1:
+        LOGGER.info(f"Frame Sampling: Sample ALL frames from each video")
+    else:
+        LOGGER.info(f"Frame Sampling: Uniformly sample {args.num_frames} frames from each video")
     
     # ===================== Class Balancing (Weighted Sampler) =====================
     # Count Pos/Neg
@@ -430,9 +484,10 @@ def main():
     LOGGER.info(f"Class Distribution | Positive (Yes): {pos_count} | Negative (No): {neg_count}")
     
     # 權重設為 Negative/Positive 的比例，這裡大約是 2.1
-    # 這代表模型每答錯一個 Positive，懲罰是答錯 Negative 的 2.1 倍
-    pos_weight_val = neg_count / max(1, pos_count) 
-    LOGGER.info(f"Using Weighted Loss with pos_weight: {pos_weight_val:.4f}")
+    # [修改] 強制設定為 5.0 以懲罰 False Negatives
+    # pos_weight_val = neg_count / max(1, pos_count) 
+    pos_weight_val = 5.0
+    LOGGER.info(f"Forcing pos_weight to: {pos_weight_val} (Original calc was {neg_count/max(1, pos_count):.2f})")
     
     # Calculate Weights
     # Prevent division by zero
@@ -479,8 +534,8 @@ def main():
     model.print_trainable_parameters()
 
     # 4. DataLoader
-    train_ds = AccidentDataset(train_data, processor, mode="train")
-    val_ds = AccidentDataset(val_data, processor, mode="val")
+    train_ds = AccidentDataset(train_data, processor, num_frames=args.num_frames, mode="train")
+    val_ds = AccidentDataset(val_data, processor, num_frames=args.num_frames, mode="val")
     
     # Use sampler instead of shuffle=True
     train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collate_fn, num_workers=4)
@@ -571,15 +626,16 @@ def main():
                 
                 # Log 顯示 (可以觀察兩個 loss 的變化)
                 if step % 20 == 0:
-                    LOGGER.info(f"LM: {lm_loss.item():.4f} | CLS: {cls_loss.item():.4f}")
+                    writer.add_scalar("train/lm_loss", lm_loss.item(), global_step)
+                    writer.add_scalar("train/cls_loss", cls_loss.item(), global_step)
+                    writer.add_scalar("train/total_loss", total_loss.item() * args.grad_accum, global_step)
 
             if (step + 1) % args.grad_accum == 0:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
                 optimizer.step()
                 scheduler.step()
                 global_step += 1
-                if step % 20 == 0:
-                    writer.add_scalar("train/loss", batch_loss, global_step)
+                writer.add_scalar("train/loss", batch_loss, global_step)
                 pbar.set_postfix({"loss": f"{batch_loss:.4f}"})
 
         # Validation
