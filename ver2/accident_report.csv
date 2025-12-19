@@ -1,0 +1,96 @@
+file_name,report,dangerous_frame_idx
+road_0000,"Accident Prediction: Yes
+
+Reasoning:
+Step 1: Scene Layout
+The image shows a night-time scene with vehicles and pedestrians at an intersection. There is a car directly in front of the camera, a pedestrian crossing the street, and another car parked on the side of the road.
+
+Step 2: Motion of Key Objects
+- The car directly in front of the camera appears to be stationary or moving very slowly, as indicated by the stable motion with a velocity of -0.007.
+- The pedestrian is crossing the street, moving towards the camera with a stable motion and a velocity of 0.002.
+- The other car on the side of the road is stationary, with a stable motion and a velocity of 0.000.
+
+Step 3: Assessing the Risk Level
+- The TTC (Time to Collision) for the car directly in front of the camera is 100.1 frames, which is considered safe.
+- The TTC for the pedestrian crossing the street is 100.1 frames, which is also considered safe.
+- The TTC for the other car on the side of the road is 100.1 frames, which is considered safe.
+
+Step 4: Conclusion
+Despite the safe TTC values, the situation appears to be high risk due to the proximity of the pedestrian to the oncoming traffic. The pedestrian is crossing the street in front of the camera, which could lead to a collision if the driver does not react in time. Additionally, the car directly in front of the camera is stationary or moving very slowly, which could make it difficult for the driver to anticipate the pedestrian's movement.
+
+Therefore, the risk level is HIGH, and an accident is predicted.",41
+road_0001,"Accident Prediction: Yes
+
+Reasoning:
+Step 1: Scene Layout
+The image shows a busy urban intersection with multiple vehicles and pedestrians. There are cars, motorcycles, and pedestrians in the scene, with some pedestrians close to the vehicles and others crossing the street.
+
+Step 2: Evaluate Motion of Key Objects
+- Pedestrians are crossing the street and are close to the vehicles, especially the silver car and the motorcycle.
+- The silver car is approaching the intersection and is close to the pedestrians.
+- The motorcycle is also approaching the intersection and is close to the pedestrians.
+
+Step 3: Assess Risk Level
+- The TTC (Time to Collision) values for pedestrians and vehicles are less than 60 frames, indicating a high risk of collision.
+- Some pedestrians are critically close to the vehicles, which increases the risk of an accident.
+
+Step 4: Conclude
+The scene shows a high risk of an accident due to the close proximity of pedestrians and vehicles, especially the silver car and the motorcycle. The TTC values and the critically close pedestrians indicate that an accident is likely to occur. Therefore, the prediction is ""Yes.""",69
+road_0002,"Accident Prediction: Yes
+Reasoning:
+
+Step 1: Scene Layout
+The image shows a busy urban street with multiple vehicles and pedestrians. There is a truck, a car, and a motorcycle in the scene. The truck is driving in the same direction as the car, while the motorcycle is following the car. Pedestrians are also present, with one walking on the sidewalk and another closer to the road.
+
+Step 2: Motion of Key Objects
+- The truck is driving in the same direction as the car, maintaining a safe distance.
+- The motorcycle is following the car, maintaining a safe distance.
+- The pedestrians are walking on the sidewalk and are not in immediate danger.
+
+Step 3: Risk Level Assessment
+- The TTC (Time to Collision) for the car and pedestrian is 48.0 frames, which is considered safe.
+- The TTC for the motorcycle and truck is 1.5 frames, which is considered a high risk.
+- The TTC for the car and motorcycle is 0.10 frames, which is considered a high risk.
+- The TTC for the pedestrian and truck is 1.0 frames, which is considered a high risk.
+- The TTC for the pedestrian and car is 0.10 frames, which is considered a high risk.
+
+Step 4: Conclusion
+The scene shows a high risk of potential accidents due to the close proximity of the motorcycle and truck, as well as the pedestrians and vehicles. The TTC values for these objects are below 60 frames, indicating a high risk of collision. Therefore, an accident prediction is made based on the high risk of potential collisions.",44
+road_0003,"Accident Prediction: Yes
+
+Reasoning:
+Step 1: Scene Layout
+The image shows a nighttime street scene with multiple vehicles and pedestrians. The vehicles are moving in different directions, and pedestrians are present on the sidewalk.
+
+Step 2: Evaluate Motion of Key Objects
+- Pedestrian: There are two pedestrians on the sidewalk. One is walking towards the camera, and the other is standing still.
+- Motorcycle: A motorcycle is present on the road, moving in the same direction as the cars.
+- Cars: Several cars are on the road, with some approaching the camera and others moving away.
+
+Step 3: Assess Risk Level
+- TTC (Time to Collision) values are provided for each object. TTC values less than 60 frames indicate a high risk of collision.
+- Objects are considered ""critically close"" if they are very close to each other or on a collision course.
+
+Step 4: Conclude
+- The scene appears to be a high-risk situation due to the presence of multiple vehicles and pedestrians on the road. The TTC values for some objects are less than 60 frames, indicating a high risk of collision.
+- The pedestrians are walking towards the camera, which increases the risk of collision with the vehicles on the road.
+- The motorcycle is also present on the road, which adds to the complexity of the situation.
+- Based on the provided information, it is predicted that an accident may occur in this scene.",86
+road_0004,"Accident Prediction: Yes
+Reasoning:
+
+Step 1: Scene Layout
+The image shows a nighttime scene with multiple vehicles on the road. There is a motorcycle in the foreground, a truck on the left, and several cars in the background. The road appears to be congested with vehicles.
+
+Step 2: Evaluate Motion of Key Objects
+- Motorcycle: The motorcycle is moving towards the camera, and its speed appears to be relatively low.
+- Truck: The truck on the left is also moving towards the camera, but its speed is slower compared to the motorcycle.
+- Cars: There are several cars in the background, and they are all moving in the same direction as the motorcycle.
+
+Step 3: Assess Risk Level
+- TTC (Time to Collision) values are provided for each object. TTC values less than 60 frames indicate a high risk of collision.
+- TTC values for the motorcycle and truck are less than 6 frames, indicating a high risk of collision.
+- TTC values for the cars in the background are also less than 6 frames, indicating a high risk of collision.
+
+Step 4: Conclude
+The scene shows a high risk of collision due to the close proximity of the motorcycle, truck, and cars. The TTC values for these objects are less than 6 frames, indicating a high risk of collision. Therefore, an accident is predicted to occur.",37

@@ -7,7 +7,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # 1. Train Seed LoRA
 echo "Starting Seed LoRA Training..."
-CUDA_VISIBLE_DEVICES=0 python3 train_seed_lora.py \
+CUDA_VISIBLE_DEVICES=1 python3 train_seed_lora.py \
     --dataset_root /raid/mystery-project/dataset \
     --csv_path /raid/mystery-project/dataset/road_train_and_val_with_reports_revised.csv \
     --epochs 10 \

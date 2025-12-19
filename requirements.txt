@@ -23,3 +23,5 @@ typing_extensions
 requests
 packaging
 pyyaml
+ultralytics
+supervision
