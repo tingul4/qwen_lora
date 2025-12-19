@@ -1,4 +1,8 @@
 import os
+# Restrict to a single GPU to prevent "device_map='auto'" from spreading across multiple cards
+# and causing driver hangs/zombie processes.
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 import cv2
 import numpy as np
 import pandas as pd
@@ -19,10 +23,10 @@ from qwen_vl_utils import process_vision_info
 
 # Configuration
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-VIDEO_DIR = "/raid/mystery-project/dataset/road/videos"
+VIDEO_DIR = os.getenv("VIDEO_DIR", "/ssd6/danielchen/dataset/road/train")
 OUTPUT_FILE = "ver3_accident_report.csv"
-SAMPLE_RATE = 5 # Process every 5th frame
 HISTORY_LEN = 5 # Keep history for smoothing
+FPS = 10 # Default FPS since we are reading frames
 
 # Models
 YOLO_MODEL = "yolo11x.pt" 
@@ -100,23 +104,45 @@ class Pipeline:
         # assuming the object is closer than the background.
         return np.percentile(crop, 20)
 
-    def analyze_video(self, video_path):
-        cap = cv2.VideoCapture(video_path)
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        
-        frame_idx = 0
-        critical_frames = []
-        
+    def analyze_frames(self, frames_dir):
+        # Determine sample rate based on memory
+        if torch.cuda.is_available():
+            free_mem, _ = torch.cuda.mem_get_info()
+            # If > 10GB free, process all frames. Else subsample.
+            if free_mem > 10 * 1024**3:
+                sample_rate = 1
+                print(f"Memory sufficient ({free_mem/1024**3:.1f}GB). Processing ALL frames.")
+            else:
+                sample_rate = 5
+                print(f"Memory tight ({free_mem/1024**3:.1f}GB). Processing every 5th frame.")
+        else:
+            sample_rate = 5 # CPU fallback
+
+        # List images
+        try:
+            image_files = sorted([f for f in os.listdir(frames_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))])
+        except FileNotFoundError:
+            print(f"Directory {frames_dir} not found.")
+            return None
+
+        if not image_files:
+            print(f"No images found in {frames_dir}")
+            return None
+
         self.object_history = {} # Reset history per video
         self.tracker = sv.ByteTrack() # Reset tracker
         
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
+        # Stats to find the "Most Likely Collision Pair" and their "Closest Moment"
+        # Structure: { track_id: {'max_score': 0.0, 'min_dist': inf, 'best_frame': None} }
+        track_stats = {} 
+        
+        for frame_idx, img_file in enumerate(image_files):
+            if frame_idx % sample_rate != 0:
+                continue
                 
-            if frame_idx % SAMPLE_RATE != 0:
-                frame_idx += 1
+            img_path = os.path.join(frames_dir, img_file)
+            frame = cv2.imread(img_path)
+            if frame is None:
                 continue
             
             # Convert to RGB
@@ -137,7 +163,6 @@ class Pipeline:
             current_risks = []
             all_frame_objects = []
             img_h, img_w = depth_map.shape
-            img_center_x = img_w / 2
                         
             for i, (box, _, _, class_id, tracker_id, _) in enumerate(detections):
                 class_name = results.names[int(class_id)]
@@ -150,6 +175,13 @@ class Pipeline:
                 # Spatial Geometry
                 x1, y1, x2, y2 = box
                 
+                # Filter out ego vehicle parts (hood/dashboard)
+                # Heuristic: touches bottom of image and is within central region
+                if y2 > (img_h * 0.95):
+                    bbox_center = (x1 + x2) / 2
+                    if (img_w * 0.25) < bbox_center < (img_w * 0.75):
+                         continue
+
                 # "Danger Zone" = Central cone of the image (approx ego lane)
                 # Use intersection logic instead of center point to catch large vehicles 
                 # partially entering the zone (e.g. front in, rear out).
@@ -190,7 +222,7 @@ class Pipeline:
                     prev = history[0] # Oldest in window
                     curr = history[-1]
                     
-                    dt = (curr["frame"] - prev["frame"]) / fps
+                    dt = (curr["frame"] - prev["frame"]) / FPS
                     d_depth = prev["depth"] - curr["depth"] # Positive if getting closer
                     
                     velocity = d_depth / dt if dt > 0 else 0
@@ -264,6 +296,7 @@ class Pipeline:
                     "id": track_id,
                     "class": class_name,
                     "distance": f"{d_meter:.1f}m",
+                    "raw_dist": d_meter,
                     "action": action,
                     "ttc": ttc_str,
                     "reason": reason,
@@ -277,12 +310,11 @@ class Pipeline:
                 if is_critical:
                     current_risks.append(obj_data)
             
-            # Save frame data if risks found or just for debugging mostly populated frames
-            # To ensure we catch accidents, we look for frames with HIGH risks.
+            # If risks found, process this frame as a candidate
             if current_risks:
                 ego_state = "moving" 
                 
-                # Frame Score = The single most dangerous object in this frame
+                # Frame Score (for reference, though we use track logic now)
                 frame_risk_score = max([obj['risk_score'] for obj in current_risks]) if current_risks else 0.0
 
                 scene_desc = {
@@ -293,21 +325,45 @@ class Pipeline:
                     "frame_risk_score": frame_risk_score
                 }
                 
-                critical_frames.append({
+                frame_package = {
                     "frame_idx": frame_idx,
                     "image": image_pil, 
                     "json_desc": scene_desc
-                })
+                }
+                
+                # --- UPDATE GLOBAL TRACK STATISTICS ---
+                # We want to find the frame where the "Highest Risk Object" is "Closest".
+                for obj in current_risks:
+                    tid = obj['id']
+                    score = obj['risk_score']
+                    dist = obj['raw_dist']
+                    
+                    if tid not in track_stats:
+                        track_stats[tid] = {'max_score': -1.0, 'min_dist': float('inf'), 'best_frame': None}
+                    
+                    # 1. Track the MAX risk this object ever reached (to identify IF it is the main threat)
+                    if score > track_stats[tid]['max_score']:
+                        track_stats[tid]['max_score'] = score
+                    
+                    # 2. Track the MIN distance and save THAT frame (to capture the moment of impact/closest approach)
+                    # Note: We only save the frame if it's the closest approach SO FAR.
+                    if dist < track_stats[tid]['min_dist']:
+                        track_stats[tid]['min_dist'] = dist
+                        track_stats[tid]['best_frame'] = frame_package
             
-            frame_idx += 1
-            
-        cap.release()
-        
-        # Select the most critical frame (Highest Risk Score)
-        if not critical_frames:
+        # --- SELECTION LOGIC ---
+        if not track_stats:
             return None
             
-        best_frame = max(critical_frames, key=lambda f: f['json_desc']['frame_risk_score'])
+        # 1. Identify the "Most Dangerous Object"
+        # The object that achieved the highest risk score at any point in the video.
+        most_dangerous_tid = max(track_stats, key=lambda x: track_stats[x]['max_score'])
+        
+        print(f"  Selected Primary Threat ID: {most_dangerous_tid} (Max Score: {track_stats[most_dangerous_tid]['max_score']:.1f})")
+        print(f"  Selecting Frame at Min Dist: {track_stats[most_dangerous_tid]['min_dist']:.1f}m")
+        
+        # 2. Return the frame where THAT object was closest
+        best_frame = track_stats[most_dangerous_tid]['best_frame']
         return best_frame
 
     def generate_report_prompt(self, scene_json):
@@ -385,14 +441,14 @@ def main():
     # Process sample
     for idx, row in tqdm(df.head(5).iterrows(), total=5):
         file_name = row['file_name']
-        video_path = os.path.join(VIDEO_DIR, f"{file_name}.mp4")
+        frames_dir = os.path.join(VIDEO_DIR, file_name)
         
-        if not os.path.exists(video_path):
-            print(f"Video {video_path} not found.")
+        if not os.path.exists(frames_dir):
+            print(f"Frames directory {frames_dir} not found.")
             continue
             
         print(f"Processing {file_name}...")
-        critical_frame = pipeline.analyze_video(video_path)
+        critical_frame = pipeline.analyze_frames(frames_dir)
         
         if critical_frame:
             print(f"Detected Critical Frame: {critical_frame['frame_idx']}")
