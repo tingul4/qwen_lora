@@ -25,6 +25,7 @@ from qwen_vl_utils import process_vision_info
 # Configuration
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 VIDEO_DIR = os.getenv("VIDEO_DIR", "/raid/mystery-project/dataset/road/train")
+VIDEO_DIR = os.getenv("VIDEO_DIR", "/raid/mystery-project/dataset/road/test")
 OUTPUT_FILE = "ver3_accident_report.csv"
 HISTORY_LEN = 10 
 FPS = 10 # Default FPS
@@ -48,6 +49,8 @@ class Pipeline:
         # State Tracking
         self.object_history = {}
         self.prev_gray = None # For Optical Flow
+        self.bg_fast = None
+        self.bg_slow = None
 
     def load_perception_models(self):
         if self.detector is None:
@@ -183,6 +186,10 @@ class Pipeline:
         self.object_history = {} 
         self.prev_gray = None 
         
+        # === 重置背景 ===
+        self.bg_fast = None
+        self.bg_slow = None
+        
         # Proper Reset of Tracker
         self.tracker = sv.ByteTrack(track_activation_threshold=0.25, lost_track_buffer=30)
         
@@ -201,6 +208,21 @@ class Pipeline:
             
             image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             image_pil = Image.fromarray(image_rgb)
+            
+            # ========== 新增：背景模型更新 ==========
+            if self.bg_fast is None:
+                self.bg_fast = curr_gray.copy()
+                self.bg_slow = curr_gray.copy()
+                recently_stopped = np.zeros_like(curr_gray, dtype=bool)
+            else:
+                self.bg_fast = cv2.addWeighted(curr_gray, 0.3, self.bg_fast, 0.7, 0)
+                if frame_idx % 5 == 0:
+                    self.bg_slow = cv2.addWeighted(curr_gray, 0.05, self.bg_slow, 0.95, 0)
+            
+            fg_fast = cv2.absdiff(curr_gray, self.bg_fast) > 20
+            fg_slow = cv2.absdiff(curr_gray, self.bg_slow) > 20
+            recently_stopped = fg_fast & ~fg_slow
+            # =====================================
             
             # 1. Detect & Track
             # Increased confidence to 0.5 to reduce jitter/false positives
@@ -344,22 +366,58 @@ class Pipeline:
                 total_box_speed = np.sqrt(box_vx**2 + box_vy**2)
                 total_flow_speed = np.sqrt(v_pix_x**2 + v_pix_y**2)
                 
+                # === 方案A：背景模型靜止檢測 ===
+                is_stationary_bg = False
+                if frame_idx > 0:
+                    try:
+                        roi_recently_stopped = recently_stopped[int(y1):int(y2), int(x1):int(x2)]
+                        if roi_recently_stopped.size > 0:
+                            ratio_stopped = roi_recently_stopped.sum() / roi_recently_stopped.size
+                            if ratio_stopped > 0.3:
+                                is_stationary_bg = True
+                    except:
+                        pass
+                
+                # === 方案B：幀差分靜止檢測 ===
+                is_stationary_diff = False
+                if self.prev_gray is not None:
+                    try:
+                        frame_diff = cv2.absdiff(self.prev_gray, curr_gray)
+                        roi_diff = frame_diff[int(y1):int(y2), int(x1):int(x2)]
+                        if roi_diff.size > 0:
+                            change_ratio = (roi_diff > 15).sum() / roi_diff.size
+                            if change_ratio < 0.01:
+                                is_stationary_diff = True
+                    except:
+                        pass
+                
                 # --- 1. STATIONARY DETECTION ---
                 # Object is stationary if box barely moves AND optical flow is minimal
-                box_move_threshold = img_w * 0.005  # 0.5% of image width per second
-                flow_threshold = img_w * 0.01  # 1% of image width per second
-                is_stationary = (total_box_speed < box_move_threshold) and (total_flow_speed < flow_threshold)
+                box_move_threshold = img_w * 0.005
+                flow_threshold = img_w * 0.01
+                is_stationary_motion = (total_box_speed < box_move_threshold) and (total_flow_speed < flow_threshold)
+                
+                # 合併三種方法
+                is_stationary = is_stationary_bg or is_stationary_diff or is_stationary_motion
                 
                 # --- 2. LATERAL MOVEMENT DETECTION ---
                 # Must have significant lateral flow relative to image width
                 lateral_threshold = img_w * 0.02  # 2% of image width
                 is_lateral_move = abs(v_pix_x) > lateral_threshold and not is_stationary
                 
+                # === 靜止物體沒有側向移動 ===
+                if is_stationary:
+                    is_lateral_move = False
+                
                 # --- 3. TURNING DETECTION with multiple criteria ---
                 is_turning = False
                 turning_confidence = 0.0
                 
-                if not is_stationary and is_lateral_move:
+                # === 靜止物體不能轉彎 ===
+                if is_stationary:
+                    is_turning = False
+                    turning_confidence = 0.0
+                elif not is_stationary and is_lateral_move:
                     # Criterion A: Lateral flow dominates vertical flow
                     if abs(v_pix_y) > 0.1:
                         lateral_ratio = abs(v_pix_x) / (abs(v_pix_y) + 1e-6)
@@ -400,6 +458,13 @@ class Pipeline:
                     
                     # Final turning decision
                     is_turning = turning_confidence >= 0.5
+                
+                # === 多幀穩定性檢查 ===
+                if len(history) >= 5:
+                    stationary_count = sum(1 for h in list(history)[-5:] if h.get('is_stationary', False))
+                    if stationary_count >= 2:
+                        is_turning = False
+                        turning_confidence = min(turning_confidence, 0.2)
                 
                 # --- 4. STRAIGHT MOVEMENT CHECK ---
                 # If vertical movement strongly dominates, it's likely straight motion
@@ -718,7 +783,7 @@ def main():
     pipeline.unload_vlm()
     pipeline.load_perception_models()
     
-    for idx, row in tqdm(df.head(5).iterrows(), total=5):
+    for idx, row in tqdm(df[180:185].iterrows(), total=5):
         file_name = row['file_name']
         frames_dir = os.path.join(VIDEO_DIR, file_name)
         
