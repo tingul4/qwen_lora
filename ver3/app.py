@@ -1,3 +1,4 @@
+from sympy.strategies.core import switch
 import os
 # Restrict to a single GPU to prevent "device_map='auto'" from spreading across multiple cards
 # and causing driver hangs/zombie processes.
@@ -28,11 +29,13 @@ from qwen_vl_utils import process_vision_info
 
 # Configuration
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-TRAIN_DIR = os.getenv("TRAIN_DIR", "/raid/mystery-project/dataset/road/train")
-TEST_DIR = os.getenv("TEST_DIR", "/raid/mystery-project/dataset/road/test")
+FREEWAY_TRAIN_DIR = os.getenv("TRAIN_DIR", "/raid/mystery-project/dataset/freeway/train")
+FREEWAY_TEST_DIR = os.getenv("TEST_DIR", "/raid/mystery-project/dataset/freeway/test")
+ROAD_TRAIN_DIR = os.getenv("TRAIN_DIR", "/raid/mystery-project/dataset/road/train")
+ROAD_TEST_DIR = os.getenv("TEST_DIR", "/raid/mystery-project/dataset/road/test")
 OUTPUT_FILE = "ver3_accident_report.csv"
-HISTORY_LEN = 10 
-FPS = 10 # Default FPS
+HISTORY_LEN = 60
+FPS = 30 # Default FPS
     
 # Models
 YOLO_MODEL = "yolo11x.pt" 
@@ -729,11 +732,12 @@ class Pipeline:
         user_prompt_text = self.generate_report_prompt(frame_data['json_desc'])
         sys_prompt_text = """
             請使用繁體中文回答，並詳細描述可能發生的意外情況與風險評估。\n
-            根據提供的影像與分析結果，請評估車輛間可能發生碰撞的情況，並說明原因與建議的預防措施。\n
+            根據提供的影像與分析結果，意外情境非常多種，除了一般車輛碰撞預測，也要透過車輛行駛軌跡或是外觀變化來判斷是否故障而在未來發生意外，第一點請詳細說明碰撞或是意外情境在幾秒後可能的發生過程，第二點根據碰撞概率以及意外概率，評估風險等級為低、中、高，第三點提出具體的預防措施以降低風險。\n
             格式如下：
-            1. 可能的碰撞情境：詳細說明可能發生的碰撞情境。
-            2. 風險評估：根據碰撞概率，評估風險等級（低、中、高）。
-            3. 預防建議：提出具體的預防措施以降低風險。
+            1. 意外情境說明：
+            2. 風險評估：
+            3. 預防建議：
+            end of prompt.
         """
         
         messages = [
@@ -859,10 +863,17 @@ class Pipeline:
 pipeline = Pipeline()
 
 def get_video_list(source):
-    if source == "Train":
-        base_dir = TRAIN_DIR
-    else:
-        base_dir = TEST_DIR
+    match source:
+        case "Freeway/Train":
+            base_dir = FREEWAY_TRAIN_DIR
+        case "Freeway/Test":
+            base_dir = FREEWAY_TEST_DIR
+        case "Road/Train":
+            base_dir = ROAD_TRAIN_DIR
+        case "Road/Test":
+            base_dir = ROAD_TEST_DIR
+        case _:
+            return []
     
     if not os.path.exists(base_dir):
         return []
@@ -870,7 +881,7 @@ def get_video_list(source):
     # List subdirectories
     return sorted([d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))])
 
-def run_task_with_loading(task_name, history, image_path, task_func, *args, **kwargs):
+def run_task_with_loading(task_name, history, image_path, stats, task_func, *args, **kwargs):
     """
     Generator that yields history updates with animation while waiting for a task in a separate thread.
     Returns the result of the task function.
@@ -883,7 +894,7 @@ def run_task_with_loading(task_name, history, image_path, task_func, *args, **kw
     
     while not future.done():
         history[-1]["content"] = f"{task_name}{dots[idx % 4]}"
-        yield history, image_path
+        yield history, image_path, stats
         time.sleep(0.3)
         idx += 1
         
@@ -895,86 +906,236 @@ def analyze_video_stream(source, video_id, history):
     # Clear history to avoid format conflicts with old data
     history = []
     image_path = None
+    stats = "### Processing Stats\nWaiting for analysis..."
         
     if not video_id:
         history.append({"role": "assistant", "content": "Please select a video first."})
-        yield history, image_path
+        yield history, image_path, stats
         return
 
     user_msg = f"Analyze {source} Video: {video_id}"
     history.append({"role": "user", "content": user_msg})
     history.append({"role": "assistant", "content": "Initializing analysis..."})
-    yield history, image_path
+    yield history, image_path, stats
     
-    if source == "Train":
-        base_dir = TRAIN_DIR
-    else:
-        base_dir = TEST_DIR
+    match source:
+        case "Freeway/Train":
+            base_dir = FREEWAY_TRAIN_DIR
+        case "Freeway/Test":
+            base_dir = FREEWAY_TEST_DIR
+        case "Road/Train":
+            base_dir = ROAD_TRAIN_DIR
+        case "Road/Test":
+            base_dir = ROAD_TEST_DIR
+        case _:
+            history[-1]["content"] = f"Error: Unknown source {source}."
+            yield history, image_path, stats
+            return
         
     frames_dir = os.path.join(base_dir, video_id)
     if not os.path.exists(frames_dir):
         history[-1]["content"] = f"Error: Directory {frames_dir} not found."
-        yield history, image_path
+        yield history, image_path, stats
         return
     
-    # 1. Perception
+    t_start_total = time.time()
+    
+    # Perception analysis
+    t_start_perception = time.time()
     pipeline.unload_vlm()
     pipeline.load_perception_models()
     
     final_frame_pkg = yield from run_task_with_loading(
-        "Running Perception Models (YOLO + Depth + Optical Flow)",
-        history, image_path,
+        "Video Analyzing",
+        history, image_path, stats,
         pipeline.analyze_frames, frames_dir
     )
+    t_end_perception = time.time()
+    perception_time = t_end_perception - t_start_perception
+    
+    stats = f"### Processing Stats\n- **Perception:** {perception_time:.2f}s"
+    yield history, image_path, stats
     
     if final_frame_pkg is None:
         history[-1]["content"] = "Error: No valid frames found or analysis failed."
-        yield history, image_path
+        yield history, image_path, stats
         return
     
-    # 2. VLM
+    # VLM inference
+    t_start_vlm = time.time()
     pipeline.unload_perception_models()
     pipeline.load_vlm()
     
     report, _ = yield from run_task_with_loading(
-        "Running VLM Inference (Qwen2-VL)",
-        history, image_path,
+        "Report Generating",
+        history, image_path, stats,
         pipeline.run_vlm_inference, final_frame_pkg
     )
+    t_end_vlm = time.time()
+    vlm_time = t_end_vlm - t_start_vlm
     
-    # 3. Vis
+    stats += f"\n- **VLM Inference:** {vlm_time:.2f}s"
+    yield history, image_path, stats
+    
+    # Visualization
+    t_start_vis = time.time()
     vis_image = yield from run_task_with_loading(
         "Generating Visualization",
-        history, image_path,
+        history, image_path, stats,
         pipeline.visualize_frame, final_frame_pkg
     )
+    t_end_vis = time.time()
+    vis_time = t_end_vis - t_start_vis
     
     # Save Image with absolute path
-    abs_vis_path = os.path.abspath(f"vis_{video_id}.jpg")
+    abs_vis_path = os.path.abspath(os.path.join("ver3/frame_cache", f"vis_{video_id}.jpg"))
     # Convert RGB back to BGR for OpenCV saving
     cv2.imwrite(abs_vis_path, cv2.cvtColor(vis_image, cv2.COLOR_RGB2BGR))
     
     image_path = abs_vis_path
     
-    # 4. Update Status and Yield Image
-    history[-1]["content"] = "Analysis complete. Generating report..."
-    yield history, image_path
+    t_end_total = time.time()
+    total_time = t_end_total - t_start_total
+    stats += f"\n- **Visualization:** {vis_time:.2f}s\n- **Total Time:** {total_time:.2f}s"
     
-    # 5. Yield Text Stream
+    # Yield Text Stream
     history.append({"role": "assistant", "content": ""})
     
     for i in range(len(report)):
         history[-1]["content"] = report[:i+1]
-        yield history, image_path
+        yield history, image_path, stats
         time.sleep(0.01)
 
+# ========== Gradio Interface ==========
 # my_theme = gr.Theme.from_hub("shivi/calm_seafoam")
 my_theme = gr.Theme.from_hub("gstaff/sketch")
-with gr.Blocks(theme=my_theme) as demo:
+
+tv_css = """
+#tv_frame {
+    border: 20px solid #2b2b2b;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #1a1a1a, #333);
+    box-shadow: 
+        inset 0 0 20px rgba(0,0,0,0.8),
+        0 15px 30px rgba(0,0,0,0.7),
+        inset 0 10px 20px rgba(50,50,50,0.5);
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+#tv_frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 10px;
+    background: 
+        /* 固定條紋 */
+        linear-gradient(to bottom, 
+            transparent 50%, 
+            rgba(0,0,0,0.4) 50.5%
+        );
+    background-size: 100% 4px;
+    z-index: 1;
+    pointer-events: none;
+    animation: scanlines 0.1s steps(60) infinite;
+    animation-play-state: var(--scanline-play, running);
+    opacity: var(--scanline-opacity, 1);
+}
+
+#tv_frame::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.6);
+    height: 2px;
+    z-index: 2;
+    pointer-events: none;
+    animation: moving-scanline 4s linear infinite;
+    animation-play-state: var(--scanline-play, running);
+    opacity: var(--scanline-opacity, 1);
+}
+
+/* 固定掃描線閃爍 */
+@keyframes scanlines {
+    0%, 100% { background-position: 0 50%; }
+}
+
+/* 移動條紋效果 */
+@keyframes moving-scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+"""
+
+tv_js = """
+function setupTvEffect() {
+    // Polling to wait for the element to exist
+    const checkExist = setInterval(function() {
+        const tvFrame = document.querySelector('#tv_frame');
+        if (tvFrame) {
+            clearInterval(checkExist);
+            initObserver(tvFrame);
+        }
+    }, 100);
+
+    function initObserver(tvFrame) {
+        function updateAnimationState() {
+            const img = tvFrame.querySelector('img');
+            // Check if image exists, has src, and is actually loaded
+            if (img && img.src && img.naturalWidth > 0) {
+                tvFrame.style.setProperty('--scanline-play', 'paused');
+                tvFrame.style.setProperty('--scanline-opacity', '0');
+                // tvFrame.style.setProperty('background', 'transparent'); 
+            } else {
+                tvFrame.style.setProperty('--scanline-play', 'running');
+                tvFrame.style.setProperty('--scanline-opacity', '1');
+                tvFrame.style.setProperty('background', 'linear-gradient(145deg, #1a1a1a, #333)');
+            }
+        }
+
+        // Initial check
+        updateAnimationState();
+
+        // Create observer
+        const observer = new MutationObserver((mutations) => {
+            updateAnimationState();
+            
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes) {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.tagName === 'IMG') {
+                            node.addEventListener('load', updateAnimationState);
+                            if (node.complete) updateAnimationState();
+                        } else if (node.querySelector) {
+                            const img = node.querySelector('img');
+                            if (img) {
+                                img.addEventListener('load', updateAnimationState);
+                                if (img.complete) updateAnimationState();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        
+        observer.observe(tvFrame, { 
+            childList: true, 
+            subtree: true, 
+            attributes: true, 
+            attributeFilter: ['src', 'style', 'class'] 
+        });
+    }
+}
+setupTvEffect();
+"""
+
+with gr.Blocks(theme=my_theme, css=tv_css, js=tv_js) as demo:
     gr.Markdown("# Road Accident Prediction & Analysis")
     
     with gr.Row():
-        source_dropdown = gr.Dropdown(choices=["Train", "Test"], label="Dataset Source", value="Train")
+        source_dropdown = gr.Dropdown(choices=["Freeway/Train", "Freeway/Test", "Road/Train", "Road/Test"], label="Dataset Source", value="Freeway/Train")
         video_dropdown = gr.Dropdown(label="Video ID", interactive=True)
     
     def update_video_list(source):
@@ -988,13 +1149,15 @@ with gr.Blocks(theme=my_theme) as demo:
     analyze_btn = gr.Button("Analyze Frames")
     
     with gr.Row():
-        image_display = gr.Image(label="Visualization", type="filepath", scale=1)
+        with gr.Column(scale=1):
+            image_display = gr.Image(label="Visualization", type="filepath", elem_id="tv_frame")
+            stats_display = gr.Markdown(value="### Processing Stats")
         chatbot = gr.Chatbot(label="Analysis Results", height=600, scale=2)
     
     analyze_btn.click(
         fn=analyze_video_stream,
         inputs=[source_dropdown, video_dropdown, chatbot],
-        outputs=[chatbot, image_display]
+        outputs=[chatbot, image_display, stats_display]
     )
     
     # Initialize video list
@@ -1002,7 +1165,4 @@ with gr.Blocks(theme=my_theme) as demo:
 
 if __name__ == "__main__":
     print("Starting Gradio Demo...")
-    # Allow current directory for file serving
-    allowed_paths = [os.path.abspath(".")]
-    print("Allowed paths for file serving:", allowed_paths)
-    demo.launch(server_name="0.0.0.0", server_port=7860, share=True, allowed_paths=allowed_paths)
+    demo.launch(server_name="0.0.0.0", server_port=7860, share=True)

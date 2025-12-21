@@ -3,3 +3,5 @@ __pycache__/
 logs/
 checkpoints/
 *.pt
+.gradio/
+ver3/frame_cache/
